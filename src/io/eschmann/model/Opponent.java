@@ -10,6 +10,7 @@ public class Opponent implements Serializable {
     public Opponent(String ip, Integer port) {
         this.ip = ip;
         this.port = port;
+        this.username = port.toString();
     }
 
     public Opponent(String ip, Integer port, String username) {

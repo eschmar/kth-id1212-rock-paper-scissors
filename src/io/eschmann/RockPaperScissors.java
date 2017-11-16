@@ -21,11 +21,8 @@ public class RockPaperScissors extends Application {
     public void init() throws Exception {
         super.init();
 
-        // Identify local ip address
-        InetAddress localAddress = InetAddress.getLocalHost();
-
         // Create player model
-        player = new Player(localAddress.getHostAddress());
+        player = new Player();
     }
 
     @Override

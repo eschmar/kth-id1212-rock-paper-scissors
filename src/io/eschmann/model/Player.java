@@ -4,6 +4,8 @@ import io.eschmann.net.client.OpponentConnection;
 import io.eschmann.net.server.ReceiverServer;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class Player {
@@ -13,12 +15,17 @@ public class Player {
 
     public ArrayList<Opponent> opponents;
 
-    public Player(String ip) {
-        this.ip = ip;
-        initServer();
-        this.username = server.port.toString();
+    public Player() throws UnknownHostException {
         this.opponents = new ArrayList<Opponent>();
-        System.out.println("New player on " + this.ip + ":" + this.server.port + "!");
+
+        // Identify local ip address
+        InetAddress localAddress = InetAddress.getLocalHost();
+
+        this.ip = localAddress.getHostAddress();
+        initServer();
+
+        this.username = server.port.toString();
+        System.out.println(this);
     }
 
     protected void addOpponent(Opponent opponent) {
@@ -48,5 +55,10 @@ public class Player {
 
     public Opponent toOpponent() {
         return new Opponent(ip, server.port, username);
+    }
+
+    @Override
+    public String toString() {
+        return "P - " + username + " [" + ip + ":" + server.port + "]";
     }
 }
