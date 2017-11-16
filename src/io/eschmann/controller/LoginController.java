@@ -1,7 +1,9 @@
 package io.eschmann.controller;
 
 import io.eschmann.common.Message;
+import io.eschmann.model.Opponent;
 import io.eschmann.model.Player;
+import io.eschmann.net.client.OpponentConnection;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -56,18 +58,13 @@ public class LoginController {
 
         if (!clickedJoin) return;
 
-        String[] input = joinInput.getText().split(":");
-        Socket pewSocket = new Socket(input[0], Integer.parseInt(input[1]));
-
-        ObjectOutputStream out = new ObjectOutputStream(pewSocket.getOutputStream());
-        ObjectInputStream in = new ObjectInputStream(pewSocket.getInputStream());
-
-        out.writeObject(new Message("join", "Pew pew pew."));
-        pewSocket.close();
-
-
         System.out.println("Clicked on join.");
-        // todo: send something to join socket.
+
+        String[] input = joinInput.getText().split(":");
+        OpponentConnection conn = new OpponentConnection();
+        conn.connect(new Opponent(input[0], Integer.parseInt(input[1])));
+        conn.sendJoinMessage();
+        conn.disconnect();
     }
 
     /**

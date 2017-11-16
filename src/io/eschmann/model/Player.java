@@ -9,13 +9,13 @@ public class Player {
     public ReceiverServer server;
     public String username;
 
-    public ArrayList<String> opponents;
+    public ArrayList<Opponent> opponents;
 
     public Player(String ip) {
         this.ip = ip;
         initServer();
         this.username = server.port.toString();
-        this.opponents = new ArrayList<String>();
+        this.opponents = new ArrayList<Opponent>();
         System.out.println("New player on " + this.ip + ":" + this.server.port + "!");
     }
 
