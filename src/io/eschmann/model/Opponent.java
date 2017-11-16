@@ -1,6 +1,8 @@
 package io.eschmann.model;
 
-public class Opponent {
+import java.io.Serializable;
+
+public class Opponent implements Serializable {
     public String ip;
     public Integer port;
     public String username;
@@ -26,5 +28,10 @@ public class Opponent {
         if (ip != null ? !ip.equals(opponent.ip) : opponent.ip != null) return false;
         if (port != null ? !port.equals(opponent.port) : opponent.port != null) return false;
         return username != null ? username.equals(opponent.username) : opponent.username == null;
+    }
+
+    @Override
+    public String toString() {
+        return username + " [" + ip + ":" + port + "]";
     }
 }

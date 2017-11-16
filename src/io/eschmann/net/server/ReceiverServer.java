@@ -1,11 +1,18 @@
 package io.eschmann.net.server;
 
+import io.eschmann.model.Opponent;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 
 public class ReceiverServer implements Runnable {
     private ServerSocket serverSocket;
     public Integer port;
+    public String ip;
+
+    public ReceiverServer(String ip) {
+        this.ip = ip;
+    }
 
     /**
      * Opens a new socket on a random port and starts a new thread.
@@ -30,7 +37,7 @@ public class ReceiverServer implements Runnable {
             System.out.println("Successfully opened socket and running!");
             while (true) {
                 // handle messages
-                new MessageHandler(serverSocket.accept()).handle();
+                new MessageHandler(serverSocket.accept(), new Opponent(ip, port)).handle();
             }
 //            while (true) new PeerClientHandler(serverSocket.accept(), controllerObserver).run();
         } catch (IOException e) {

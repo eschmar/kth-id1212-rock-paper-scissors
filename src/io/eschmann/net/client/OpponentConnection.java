@@ -36,9 +36,9 @@ public class OpponentConnection {
 //        new Thread(new Listener(broadcastHandler)).start();
     }
 
-    public Opponent sendJoinMessage() throws IOException {
+    public Opponent sendJoinMessage() throws IOException, ClassNotFoundException {
         out.writeObject(new Message(Message.TYPE_JOIN, "Pew."));
-        return null;
+        return (Opponent) in.readObject();
     }
 
     /**

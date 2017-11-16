@@ -28,19 +28,19 @@ public class LoginController {
     @FXML
     public TextField joinInput;
 
-    public void onNewGameAction(ActionEvent actionEvent) throws IOException {
+    public void onNewGameAction(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         changeToGameState();
     }
 
-    public void onJoinGameAction(ActionEvent actionEvent) throws IOException {
+    public void onJoinGameAction(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         changeToGameState(true);
     }
 
-    protected void changeToGameState() throws IOException {
+    protected void changeToGameState() throws IOException, ClassNotFoundException {
         changeToGameState(false);
     }
 
-    protected void changeToGameState(boolean clickedJoin) throws IOException {
+    protected void changeToGameState(boolean clickedJoin) throws IOException, ClassNotFoundException {
         // update username
         player.username = usernameInput.getText();
 
@@ -61,10 +61,13 @@ public class LoginController {
         System.out.println("Clicked on join.");
 
         String[] input = joinInput.getText().split(":");
-        OpponentConnection conn = new OpponentConnection();
-        conn.connect(new Opponent(input[0], Integer.parseInt(input[1])));
-        conn.sendJoinMessage();
-        conn.disconnect();
+        player.joinGame(input[0], Integer.parseInt(input[1]));
+//        try {
+//            player.joinGame(input[0], Integer.parseInt(input[1]));
+//        } catch (ClassNotFoundException e) {
+//
+//        }
+
     }
 
     /**
