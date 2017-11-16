@@ -10,22 +10,27 @@ public class ReceiverServer implements Runnable {
     public Integer port;
     public String ip;
 
+    /**
+     * Opens a new socket on a random port.
+     * @param ip
+     */
     public ReceiverServer(String ip) {
         this.ip = ip;
-    }
 
-    /**
-     * Opens a new socket on a random port and starts a new thread.
-     */
-    public void start() {
         try {
             serverSocket = new ServerSocket(0);
             port = serverSocket.getLocalPort();
             System.out.println("listening on port: " + port);
-            new Thread(this).start();
         } catch (Exception e) {
             System.out.println("Could not create serverSocket.");
         }
+    }
+
+    /**
+     *  Starts a new thread accepting socket connections.
+     */
+    public void start() {
+        new Thread(this).start();
     }
 
     /**

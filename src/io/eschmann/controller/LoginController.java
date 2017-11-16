@@ -59,7 +59,6 @@ public class LoginController {
         if (!clickedJoin) return;
 
         System.out.println("Clicked on join.");
-
         String[] input = joinInput.getText().split(":");
 
         try {
@@ -78,7 +77,7 @@ public class LoginController {
         this.player = player;
         this.primaryStage = stage;
 
-        myIpText.setText(player.ip + ":" + player.server.port);
+        myIpText.setText(player.ip + ":" + player.port);
         usernameInput.setText(player.username);
     }
 }

@@ -55,7 +55,7 @@ public class GameController {
         this.player = player;
         this.primaryStage = stage;
 
-        myIpText.setText(player.ip + ":" + player.server.port);
+        myIpText.setText(player.ip + ":" + player.port);
         usernameLabel.setText(player.username);
     }
 }

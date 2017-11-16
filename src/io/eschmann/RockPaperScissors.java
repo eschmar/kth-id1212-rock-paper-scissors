@@ -2,6 +2,7 @@ package io.eschmann;
 
 import io.eschmann.controller.LoginController;
 import io.eschmann.model.Player;
+import io.eschmann.net.server.ReceiverServer;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,6 +13,7 @@ import java.net.InetAddress;
 
 public class RockPaperScissors extends Application {
     private Player player;
+    private ReceiverServer server;
 
     public static void main(String[] args) {
         launch(args);
@@ -21,8 +23,15 @@ public class RockPaperScissors extends Application {
     public void init() throws Exception {
         super.init();
 
+        // Identify local ip address
+        InetAddress localAddress = InetAddress.getLocalHost();
+        String ip = localAddress.getHostAddress();
+
+        // Prepare new receiver server
+        server = new ReceiverServer(ip);
+
         // Create player model
-        player = new Player();
+        player = new Player(ip, server.port);
     }
 
     @Override
@@ -37,6 +46,9 @@ public class RockPaperScissors extends Application {
         LoginController loginController = (LoginController) loader.getController();
         loginController.init(player, primaryStage);
 
+        // start server process
+        server.start();
+
         // show scene
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -45,6 +57,6 @@ public class RockPaperScissors extends Application {
     @Override
     public void stop() throws Exception {
         super.stop();
-        player.server.terminate();
+        server.terminate();
     }
 }

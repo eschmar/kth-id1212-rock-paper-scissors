@@ -10,21 +10,17 @@ import java.util.ArrayList;
 
 public class Player {
     public String ip;
-    public ReceiverServer server;
+    public Integer port;
     public String username;
 
     public ArrayList<Opponent> opponents;
 
-    public Player() throws UnknownHostException {
+    public Player(String ip, Integer port) throws UnknownHostException {
         this.opponents = new ArrayList<Opponent>();
+        this.ip = ip;
+        this.port = port;
+        this.username = port.toString();
 
-        // Identify local ip address
-        InetAddress localAddress = InetAddress.getLocalHost();
-
-        this.ip = localAddress.getHostAddress();
-        initServer();
-
-        this.username = server.port.toString();
         System.out.println(this);
     }
 
@@ -37,12 +33,13 @@ public class Player {
         opponents.add(opponent);
     }
 
-    /**
-     * Start new receiver process
-     */
-    private void initServer() {
-        server = new ReceiverServer(ip);
-        server.start();
+    public Opponent toOpponent() {
+        return new Opponent(ip, port, username);
+    }
+
+    @Override
+    public String toString() {
+        return "P - " + username + " [" + ip + ":" + port + "]";
     }
 
     public void joinGame(String ip, int port) throws IOException, ClassNotFoundException {
@@ -53,12 +50,5 @@ public class Player {
         conn.disconnect();
     }
 
-    public Opponent toOpponent() {
-        return new Opponent(ip, server.port, username);
-    }
 
-    @Override
-    public String toString() {
-        return "P - " + username + " [" + ip + ":" + server.port + "]";
-    }
 }
