@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -20,7 +21,7 @@
         <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" />
       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="-Infinity" vgrow="ALWAYS" />
+      <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="ALWAYS" />
       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="-Infinity" minHeight="-Infinity" vgrow="SOMETIMES" />
     </rowConstraints>
@@ -58,7 +59,7 @@
          </children>
       </HBox>
       <Label text="Log" GridPane.rowIndex="7" />
-      <Label fx:id="logLabel" text="&gt;." GridPane.rowIndex="8" />
+      <TextArea fx:id="logTextarea" prefRowCount="3" editable="false" promptText="&gt;." GridPane.rowIndex="8" />
     </children>
    <padding>
       <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
