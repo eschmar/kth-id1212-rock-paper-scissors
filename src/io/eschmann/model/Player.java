@@ -1,12 +1,24 @@
 package io.eschmann.model;
 
+import io.eschmann.net.server.ReceiverServer;
+
 public class Player {
     public String ip;
-    public int port;
+    public ReceiverServer server;
+    public String username;
 
-    public Player(String ip, int port) {
+    public Player(String ip) {
         this.ip = ip;
-        this.port = port;
-        System.out.println("New player on " + this.ip + ":" + this.port + "!");
+        initServer();
+
+        System.out.println("New player on " + this.ip + ":" + this.server.port + "!");
+    }
+
+    /**
+     * Start new receiver process
+     */
+    private void initServer() {
+        server = new ReceiverServer();
+        server.start();
     }
 }

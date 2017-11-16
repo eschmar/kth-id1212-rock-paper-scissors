@@ -30,9 +30,11 @@ public class ReceiverServer implements Runnable {
             System.out.println("Successfully opened socket and running!");
             while (true) {
                 // handle messages
-
+                new MessageHandler(serverSocket.accept()).handle();
             }
 //            while (true) new PeerClientHandler(serverSocket.accept(), controllerObserver).run();
+        } catch (IOException e) {
+            // catch.
         } finally {
             terminate();
         }

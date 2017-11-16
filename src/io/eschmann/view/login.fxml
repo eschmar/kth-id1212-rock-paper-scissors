@@ -23,11 +23,11 @@
 </rowConstraints>
 <children>
       <TextField fx:id="myIpText" editable="false" text="IP" />
-    <TextField id="usernameInput" promptText="Username..." GridPane.rowIndex="1" />
-    <Button id="newGameButton" mnemonicParsing="false" onAction="#pewAction" prefHeight="27.0" prefWidth="240.0" text="New Game" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
+    <TextField id="usernameInput" fx:id="usernameInput" promptText="Username..." GridPane.rowIndex="1" />
+    <Button id="newGameButton" mnemonicParsing="false" onAction="#onNewGameAction" prefHeight="27.0" prefWidth="240.0" text="New Game" textAlignment="CENTER" GridPane.halignment="LEFT" GridPane.hgrow="ALWAYS" GridPane.rowIndex="3" />
     <Label text="or join existing game:" GridPane.rowIndex="4" />
-    <TextField id="joinIpInput" promptText="IP..." GridPane.rowIndex="5" />
-    <Button id="joinButton" mnemonicParsing="false" prefWidth="240.0" text="Join" GridPane.rowIndex="6" />
+    <TextField id="joinIpInput" fx:id="joinInput" promptText="IP..." GridPane.rowIndex="5" />
+    <Button id="joinButton" mnemonicParsing="false" onAction="#onJoinGameAction" prefWidth="240.0" text="Join" GridPane.rowIndex="6" />
 </children>
 <padding>
     <Insets bottom="12.0" left="12.0" right="12.0" top="12.0" />
