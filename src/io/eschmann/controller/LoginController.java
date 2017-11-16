@@ -1,5 +1,6 @@
 package io.eschmann.controller;
 
+import io.eschmann.common.MessageWrapper;
 import io.eschmann.model.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -9,6 +10,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class LoginController {
     @FXML
@@ -46,6 +50,16 @@ public class LoginController {
         primaryStage.getScene().setRoot(root);
 
         if (!clickedJoin) return;
+
+        String[] input = joinInput.getText().split(":");
+        Socket pewSocket = new Socket(input[0], Integer.parseInt(input[1]));
+
+        ObjectOutputStream out = new ObjectOutputStream(pewSocket.getOutputStream());
+        ObjectInputStream in = new ObjectInputStream(pewSocket.getInputStream());
+
+        out.writeObject(new MessageWrapper("Pew pew pew."));
+        pewSocket.close();
+
 
         System.out.println("Clicked on join.");
         // todo: send something to join socket.

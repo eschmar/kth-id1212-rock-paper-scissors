@@ -8,4 +8,9 @@ public class MessageWrapper implements Serializable {
     public MessageWrapper(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return message;
+    }
 }

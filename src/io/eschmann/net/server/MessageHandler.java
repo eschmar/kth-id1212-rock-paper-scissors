@@ -18,24 +18,23 @@ public class MessageHandler {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            in.readObject();
-
             MessageWrapper message = (MessageWrapper) in.readObject();
+            System.out.println(message);
 
-            switch (message.getMessage()) {
-                case JOIN:
-                    controllerObserver.addPeer(message.getSenderPeerInfo());
-                    out.writeObject(new MessageWrapper(Message.SYNC, controllerObserver.getPeerInfo()));
-                    break;
-                case LEAVE:
-                    controllerObserver.removePeer(message.getSenderPeerInfo());
-                    break;
-                case MOVE:
-                    controllerObserver.setPeerMove(message.getMove(), message.getSenderPeerInfo());
-                    break;
-                default:
-                    LOGGER.log(Level.SEVERE, "Unrecognized command!");
-            }
+//            switch (message.message) {
+//                case JOIN:
+//                    controllerObserver.addPeer(message.getSenderPeerInfo());
+//                    out.writeObject(new MessageWrapper(Message.SYNC, controllerObserver.getPeerInfo()));
+//                    break;
+//                case LEAVE:
+//                    controllerObserver.removePeer(message.getSenderPeerInfo());
+//                    break;
+//                case MOVE:
+//                    controllerObserver.setPeerMove(message.getMove(), message.getSenderPeerInfo());
+//                    break;
+//                default:
+//                    LOGGER.log(Level.SEVERE, "Unrecognized command!");
+//            }
             // do things
         } catch (Exception e) {
 
