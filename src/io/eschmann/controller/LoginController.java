@@ -1,12 +1,11 @@
 package io.eschmann.controller;
 
-import io.eschmann.common.MessageWrapper;
+import io.eschmann.common.Message;
 import io.eschmann.model.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -63,7 +62,7 @@ public class LoginController {
         ObjectOutputStream out = new ObjectOutputStream(pewSocket.getOutputStream());
         ObjectInputStream in = new ObjectInputStream(pewSocket.getInputStream());
 
-        out.writeObject(new MessageWrapper("Pew pew pew."));
+        out.writeObject(new Message("join", "Pew pew pew."));
         pewSocket.close();
 
 

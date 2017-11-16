@@ -1,6 +1,6 @@
 package io.eschmann.net.server;
 
-import io.eschmann.common.MessageWrapper;
+import io.eschmann.common.Message;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -18,7 +18,7 @@ public class MessageHandler {
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
-            MessageWrapper message = (MessageWrapper) in.readObject();
+            Message message = (Message) in.readObject();
             System.out.println(message);
 
 //            switch (message.message) {
