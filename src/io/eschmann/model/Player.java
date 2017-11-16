@@ -14,6 +14,7 @@ public class Player {
     public Player(String ip) {
         this.ip = ip;
         initServer();
+        this.username = server.port.toString();
         this.opponents = new ArrayList<String>();
         System.out.println("New player on " + this.ip + ":" + this.server.port + "!");
     }

@@ -15,6 +15,9 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 public class LoginController {
+    protected Player player;
+    protected Stage primaryStage;
+
     @FXML
     public TextField myIpText;
 
@@ -71,5 +74,13 @@ public class LoginController {
 
     protected Player getPlayer() {
         return (Player) getStage().getUserData();
+    }
+
+    public void pewInit(Player player, Stage stage) {
+        this.player = player;
+        this.primaryStage = stage;
+
+        myIpText.setText(player.ip + ":" + player.server.port);
+        usernameInput.setText(player.username);
     }
 }

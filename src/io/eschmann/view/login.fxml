@@ -30,7 +30,7 @@
                 prefWidth="240.0" text="New Game" textAlignment="CENTER" GridPane.halignment="LEFT"
                 GridPane.hgrow="ALWAYS" GridPane.rowIndex="3"/>
         <Label text="or join existing game:" GridPane.rowIndex="4"/>
-        <TextField id="joinIpInput" fx:id="joinInput" promptText="IP..." GridPane.rowIndex="5"/>
+        <TextField id="joinIpInput" fx:id="joinInput" promptText="ip:port..." GridPane.rowIndex="5"/>
         <Button id="joinButton" mnemonicParsing="false" onAction="#onJoinGameAction" prefWidth="240.0" text="Join"
                 GridPane.rowIndex="6"/>
     </children>

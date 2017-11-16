@@ -1,5 +1,6 @@
 package io.eschmann;
 
+import io.eschmann.controller.LoginController;
 import io.eschmann.model.Player;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,12 +30,17 @@ public class RockPaperScissors extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("view/login.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("view/login.fxml"));
+        Parent root = loader.load();
+
         primaryStage.setTitle("Rock Paper Scissors");
+        Scene scene = new Scene(root, 240, 300);
 
-        Scene scene = new Scene(root, 240, 275);
-        primaryStage.setUserData(player);
+        // get controller
+        LoginController loginController = (LoginController) loader.getController();
+        loginController.pewInit(player, primaryStage);
 
+        // show scene
         primaryStage.setScene(scene);
         primaryStage.show();
     }
