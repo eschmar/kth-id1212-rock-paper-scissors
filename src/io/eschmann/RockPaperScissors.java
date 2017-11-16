@@ -38,7 +38,7 @@ public class RockPaperScissors extends Application {
 
         // get controller
         LoginController loginController = (LoginController) loader.getController();
-        loginController.pewInit(player, primaryStage);
+        loginController.init(player, primaryStage);
 
         // show scene
         primaryStage.setScene(scene);

@@ -39,18 +39,21 @@ public class LoginController {
         changeToGameState(false);
     }
 
-    public void updatePlayerIp() {
-        Player player = getPlayer();
-        myIpText.setText(player.ip + ":" + player.server.port);
-    }
-
     protected void changeToGameState(boolean clickedJoin) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../view/game.fxml"));
-        Stage primaryStage = getStage();
-
-        Player player = (Player) primaryStage.getUserData();
+        // update username
         player.username = usernameInput.getText();
+
+        // load new view
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/game.fxml"));
+        Parent root = loader.load();
+
+        // get controller
+        GameController gameController = (GameController) loader.getController();
+        gameController.init(player, primaryStage);
+
+        // show scene
         primaryStage.getScene().setRoot(root);
+        primaryStage.show();
 
         if (!clickedJoin) return;
 
@@ -68,15 +71,12 @@ public class LoginController {
         // todo: send something to join socket.
     }
 
-    protected Stage getStage() {
-        return (Stage) myIpText.getScene().getWindow();
-    }
-
-    protected Player getPlayer() {
-        return (Player) getStage().getUserData();
-    }
-
-    public void pewInit(Player player, Stage stage) {
+    /**
+     * Updates the view with player information and makes the player and stage available to the controller.
+     * @param player
+     * @param stage
+     */
+    public void init(Player player, Stage stage) {
         this.player = player;
         this.primaryStage = stage;
 
