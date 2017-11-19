@@ -15,6 +15,7 @@ public class Player {
     public Integer port;
     public String username;
 
+    private ArrayList<String> moves;
     private ArrayList<Opponent> opponents;
     private int roundCount = 0;
     private int score = 0;
@@ -25,6 +26,16 @@ public class Player {
         this.ip = ip;
         this.port = port;
         this.username = port.toString();
+    }
+
+    public void makeMove(String move) {
+        if (!move.equals(Game.MOVE_ROCK) && !move.equals(Game.MOVE_PAPER) && !move.equals(Game.MOVE_SCISSORS)) {
+            throw new IllegalArgumentException("Illegal move detected!");
+        }
+
+        moves.add(++roundCount, move);
+        // todo: send move to opponents.
+        // todo: update view.
     }
 
     public void addOpponent(Opponent opponent) {
@@ -57,6 +68,10 @@ public class Player {
 
     public Opponent toOpponent() {
         return new Opponent(ip, port, username);
+    }
+
+    public ArrayList<String> getMoves() {
+        return moves;
     }
 
     public ArrayList<Opponent> getOpponents() {

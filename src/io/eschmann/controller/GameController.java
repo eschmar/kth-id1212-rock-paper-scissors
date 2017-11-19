@@ -1,11 +1,13 @@
 package io.eschmann.controller;
 
+import io.eschmann.model.Game;
 import io.eschmann.model.Opponent;
 import io.eschmann.model.Player;
 import io.eschmann.net.client.OpponentConnection;
 import io.eschmann.net.common.Observer;
 import io.eschmann.net.server.ReceiverServer;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -87,6 +89,25 @@ public class GameController {
                 System.out.println("Unable to join game.");
             }
         });
+    }
+
+    public void onMoveRockAction(ActionEvent actionEvent) {
+        makeMove(Game.MOVE_ROCK);
+    }
+
+    public void onMovePaperAction(ActionEvent actionEvent) {
+        makeMove(Game.MOVE_PAPER);
+    }
+
+    public void onMoveScissorsAction(ActionEvent actionEvent) {
+        makeMove(Game.MOVE_SCISSORS);
+    }
+
+    public void makeMove(String move) {
+        rockBtn.setDisable(true);
+        paperBtn.setDisable(true);
+        scissorsBtn.setDisable(true);
+        player.makeMove(move);
     }
 
     private class GameObserver implements Observer {

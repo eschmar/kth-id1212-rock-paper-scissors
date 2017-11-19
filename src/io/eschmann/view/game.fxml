@@ -54,9 +54,9 @@
         </HBox>
       <HBox spacing="6.0" GridPane.halignment="CENTER" GridPane.rowIndex="6" GridPane.valignment="CENTER">
          <children>
-            <Button fx:id="rockBtn" mnemonicParsing="false" text="Rock" />
-            <Button fx:id="paperBtn" mnemonicParsing="false" text="Paper" />
-            <Button fx:id="scissorsBtn" mnemonicParsing="false" text="Scissors" />
+            <Button fx:id="rockBtn" mnemonicParsing="false" onAction="#onMoveRockAction" text="Rock" />
+            <Button fx:id="paperBtn" mnemonicParsing="false" onAction="#onMovePaperAction" text="Paper" />
+            <Button fx:id="scissorsBtn" mnemonicParsing="false" onAction="#onMoveScissorsAction" text="Scissors" />
          </children>
       </HBox>
       <Label text="Log" GridPane.rowIndex="7" />

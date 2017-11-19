@@ -8,11 +8,14 @@ import java.util.ArrayList;
 public class Message implements Serializable {
     public static final String TYPE_JOIN = "join";
     public static final String TYPE_ANNOUNCE = "announce";
+    public static final String TYPE_MOVE = "move";
 
     public String type;
     public String message;
     public Opponent opponent;
     public ArrayList<Opponent> opponents;
+    public String move;
+    public int round;
 
     public Message(String type, String message) {
         this.type = type;
