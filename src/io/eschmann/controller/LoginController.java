@@ -59,8 +59,6 @@ public class LoginController {
         primaryStage.show();
 
         if (!clickedJoin) return;
-
-        System.out.println("Clicked on join.");
         String[] input = joinInput.getText().split(":");
 
         try {

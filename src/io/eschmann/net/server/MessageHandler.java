@@ -20,8 +20,6 @@ public class MessageHandler {
 
     public void handle() {
         try {
-            System.out.println("MessageHandler is handling a message.");
-
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
@@ -32,6 +30,7 @@ public class MessageHandler {
                 case Message.TYPE_JOIN:
                     // respond
                     out.writeObject(playerAsOpponent);
+                    observer.addLog("A new player joined.");
                     break;
                 default:
                     System.out.println("Unsupported message received...");

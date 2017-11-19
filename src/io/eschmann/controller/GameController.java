@@ -12,6 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GameController {
     protected Player player;
     protected Stage primaryStage;
@@ -77,6 +80,14 @@ public class GameController {
             Platform.runLater(() -> {
                 System.out.println("Updated things!");
                 scoreWinLabel.setText("35");
+            });
+        }
+
+        @Override
+        public void addLog(String message) {
+            Platform.runLater(() -> {
+                String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
+                logTextarea.appendText(timestamp + " - " + message + "\n");
             });
         }
     }
