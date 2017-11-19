@@ -39,13 +39,10 @@ public class ReceiverServer implements Runnable {
      */
     @Override
     public void run() {
-        System.out.println("Thread inside run(): " + Thread.currentThread().getId());
         try {
-            System.out.println("Successfully opened socket and running!");
             while (true) {
                 // handle messages
-                MessageHandler handler = new MessageHandler(serverSocket.accept(), new Opponent(ip, port, username), observer);
-                handler.handle();
+                new MessageHandler(serverSocket.accept(), new Opponent(ip, port, username), observer).handle();
             }
         } catch (IOException e) {
             System.out.println("ReceiverServer experienced an error and will terminate! " + e.getMessage());
