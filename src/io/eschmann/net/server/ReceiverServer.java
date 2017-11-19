@@ -1,6 +1,8 @@
 package io.eschmann.net.server;
 
 import io.eschmann.model.Opponent;
+import io.eschmann.net.common.Observer;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 
@@ -46,7 +48,6 @@ public class ReceiverServer implements Runnable {
             }
         } catch (IOException e) {
             System.out.println("ReceiverServer experienced an error and will terminate! " + e.getMessage());
-            // catch.
         } finally {
             terminate();
         }

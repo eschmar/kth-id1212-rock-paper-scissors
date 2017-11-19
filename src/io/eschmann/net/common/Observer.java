@@ -1,6 +1,6 @@
-package io.eschmann.net.server;
+package io.eschmann.net.common;
 
 public interface Observer {
-    public void updateThings();
+    public void updateScoreView();
     public void addLog(String message);
 }

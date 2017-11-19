@@ -1,7 +1,8 @@
 package io.eschmann.net.server;
 
-import io.eschmann.common.Message;
+import io.eschmann.net.common.Message;
 import io.eschmann.model.Opponent;
+import io.eschmann.net.common.Observer;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -37,7 +38,7 @@ public class MessageHandler {
             }
 
             socket.close();
-            observer.updateThings();
+            observer.updateScoreView();
         } catch (Exception e) {
             System.out.println("MessageHandler error --> " + e.getMessage());
             e.printStackTrace(System.out);

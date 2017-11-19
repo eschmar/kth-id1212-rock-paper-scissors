@@ -1,9 +1,9 @@
 package io.eschmann.net.client;
 
-import io.eschmann.common.Message;
+import io.eschmann.net.common.Message;
 import io.eschmann.model.Opponent;
 import io.eschmann.model.Player;
-import io.eschmann.net.server.Observer;
+import io.eschmann.net.common.Observer;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -43,7 +43,7 @@ public class OpponentConnection {
     public void sendJoinMessage(Player player, Observer gameObserver) throws IOException, ClassNotFoundException {
         out.writeObject(new Message(Message.TYPE_JOIN, "Pew."));
         player.addOpponent((Opponent) in.readObject());
-        gameObserver.updateThings();
+        gameObserver.updateScoreView();
     }
 
     /**

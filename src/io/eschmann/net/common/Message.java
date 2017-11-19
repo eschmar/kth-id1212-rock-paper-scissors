@@ -1,4 +1,4 @@
-package io.eschmann.common;
+package io.eschmann.net.common;
 
 import java.io.Serializable;
 
