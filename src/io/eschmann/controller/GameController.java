@@ -1,6 +1,8 @@
 package io.eschmann.controller;
 
+import io.eschmann.model.Opponent;
 import io.eschmann.model.Player;
+import io.eschmann.net.client.OpponentConnection;
 import io.eschmann.net.server.Observer;
 import io.eschmann.net.server.ReceiverServer;
 import javafx.application.Platform;
@@ -12,13 +14,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.CompletableFuture;
 
 public class GameController {
     protected Player player;
     protected Stage primaryStage;
     protected ReceiverServer server;
+    private final OpponentConnection opponentConnection = new OpponentConnection();
 
     @FXML
     public Label usernameLabel;
@@ -58,28 +63,42 @@ public class GameController {
      * @param player
      * @param stage
      */
-    public void init(Player player, Stage stage, ReceiverServer server) {
+    public void init(Player player, Stage stage, ReceiverServer server, Opponent opponent) {
         this.player = player;
         this.primaryStage = stage;
         this.server = server;
 
+        // start receiver server
         server.username = player.username;
         server.observer = new GameObserver();
         server.start();
 
-//        System.out.println("Thread after server start: " + Thread.currentThread().getId());
-
+        // update view with ip and username
         myIpText.setText(player.ip + ":" + player.port);
         usernameLabel.setText(player.username);
-    }
 
+        if (opponent == null) return;
+
+        CompletableFuture.runAsync(() -> {
+            try {
+                opponentConnection.connect(opponent);
+                opponentConnection.sendJoinMessage(player, new GameObserver());
+                opponentConnection.disconnect();
+            } catch (Exception e) {
+                System.out.println("Unable to join game.");
+            }
+        });
+    }
 
     private class GameObserver implements Observer {
         @Override
         public void updateThings() {
             Platform.runLater(() -> {
+                scoreWinLabel.setText("" + player.score);
+                scoreLossLabel.setText("" + player.losses);
+                roundNumberLabel.setText("" + player.roundCount);
+                playerCountLabel.setText("" + player.opponents.size());
                 System.out.println("Updated things!");
-                scoreWinLabel.setText("35");
             });
         }
 

@@ -14,6 +14,9 @@ public class Player {
     public String username;
 
     public ArrayList<Opponent> opponents;
+    public int roundCount = 0;
+    public int score = 0;
+    public int losses = 0;
 
     public Player(String ip, Integer port) throws UnknownHostException {
         this.opponents = new ArrayList<Opponent>();
@@ -24,7 +27,7 @@ public class Player {
         System.out.println(this);
     }
 
-    protected void addOpponent(Opponent opponent) {
+    public void addOpponent(Opponent opponent) {
         if (opponents.contains(opponent)) {
             return;
         }
@@ -41,14 +44,4 @@ public class Player {
     public String toString() {
         return "P - " + username + " [" + ip + ":" + port + "]";
     }
-
-    public void joinGame(String ip, int port) throws IOException, ClassNotFoundException {
-        OpponentConnection conn = new OpponentConnection();
-        conn.connect(new Opponent(ip, port));
-        Opponent newOpponent = conn.sendJoinMessage();
-        addOpponent(newOpponent);
-        conn.disconnect();
-    }
-
-
 }
