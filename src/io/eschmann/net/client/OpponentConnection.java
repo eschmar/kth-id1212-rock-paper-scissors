@@ -21,8 +21,6 @@ public class OpponentConnection {
     private ObjectOutputStream out;
     private ObjectInputStream in;
 
-
-
     /**
      * Connect to a specific opponent.
      * @param opponent
@@ -41,9 +39,14 @@ public class OpponentConnection {
     }
 
     public void sendJoinMessage(Player player, Observer gameObserver) throws IOException, ClassNotFoundException {
-        out.writeObject(new Message(Message.TYPE_JOIN, "Pew."));
-        player.addOpponent((Opponent) in.readObject());
-        gameObserver.updateScoreView();
+        Message msg = new Message(Message.TYPE_JOIN, "May i join?");
+        msg.opponent = player.toOpponent();
+
+        out.writeObject(msg);
+
+        Message message = (Message) in.readObject();
+        Opponent newOpponent = message.opponent;
+        gameObserver.newPlayerJoined(newOpponent, message.opponents);
     }
 
     /**
@@ -54,5 +57,12 @@ public class OpponentConnection {
         in.close();
         out.close();
         opponentSocket.close();
+    }
+
+    public void announceMyself(Opponent opponent) throws IOException {
+        Message msg = new Message(Message.TYPE_ANNOUNCE, "I'm new here.");
+        msg.opponent = opponent;
+
+        out.writeObject(msg);
     }
 }

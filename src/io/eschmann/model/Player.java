@@ -1,5 +1,6 @@
 package io.eschmann.model;
 
+import io.eschmann.controller.GameController;
 import io.eschmann.net.client.OpponentConnection;
 import io.eschmann.net.server.ReceiverServer;
 
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 public class Player {
     public String ip;
@@ -26,17 +28,31 @@ public class Player {
     }
 
     public void addOpponent(Opponent opponent) {
-        if (opponents.contains(opponent)) {
+        if (opponents.contains(opponent) || (ip.equals(opponent.ip) && port.equals(opponent.port))) {
             return;
         }
 
         opponents.add(opponent);
+        CompletableFuture.runAsync(() -> {
+            try {
+                OpponentConnection opponentConnection = new OpponentConnection();
+                opponentConnection.connect(opponent);
+                opponentConnection.announceMyself(this.toOpponent());
+                opponentConnection.disconnect();
+            } catch (Exception e) {
+                System.out.println("Unable to join game.");
+            }
+        });
     }
 
     public void addOpponents(ArrayList<Opponent> opponents) {
         for (Opponent opponent : opponents) {
             addOpponent(opponent);
         }
+    }
+
+    public void play(String myMove, String opponentMove, Integer round) {
+//        todo
     }
 
     public Opponent toOpponent() {

@@ -9,7 +9,6 @@ import java.net.ServerSocket;
 public class ReceiverServer implements Runnable {
     private ServerSocket serverSocket;
     public Integer port;
-    public String username;
     public String ip;
     public Observer observer;
 
@@ -44,7 +43,7 @@ public class ReceiverServer implements Runnable {
         try {
             while (true) {
                 // handle messages
-                new MessageHandler(serverSocket.accept(), new Opponent(ip, port, username), observer).handle();
+                new MessageHandler(serverSocket.accept(), observer).handle();
             }
         } catch (IOException e) {
             System.out.println("ReceiverServer experienced an error and will terminate! " + e.getMessage());

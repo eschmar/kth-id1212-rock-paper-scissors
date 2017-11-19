@@ -15,6 +15,7 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.CompletableFuture;
 
@@ -68,7 +69,6 @@ public class GameController {
         this.server = server;
 
         // start receiver server
-        server.username = player.username;
         server.observer = new GameObserver();
         server.start();
 
@@ -107,6 +107,20 @@ public class GameController {
                 String timestamp = new SimpleDateFormat("HH:mm:ss").format(new Date());
                 logTextarea.appendText(timestamp + " - " + message + "\n");
             });
+        }
+
+        @Override
+        public Player newPlayerJoined(Opponent opponent, ArrayList<Opponent> opponents) {
+            player.addOpponent(opponent);
+            player.addOpponents(opponents);
+            updateScoreView();
+            return player;
+        }
+
+        @Override
+        public void newPlayerAnnouncedHimself(Opponent newOpponent) {
+            player.addOpponent(newOpponent);
+            updateScoreView();
         }
     }
 }
