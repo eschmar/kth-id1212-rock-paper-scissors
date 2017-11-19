@@ -1,6 +1,9 @@
 package io.eschmann.controller;
 
 import io.eschmann.model.Player;
+import io.eschmann.net.server.Observer;
+import io.eschmann.net.server.ReceiverServer;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -12,6 +15,7 @@ import javafx.stage.Stage;
 public class GameController {
     protected Player player;
     protected Stage primaryStage;
+    protected ReceiverServer server;
 
     @FXML
     public Label usernameLabel;
@@ -51,11 +55,29 @@ public class GameController {
      * @param player
      * @param stage
      */
-    public void init(Player player, Stage stage) {
+    public void init(Player player, Stage stage, ReceiverServer server) {
         this.player = player;
         this.primaryStage = stage;
+        this.server = server;
+
+        server.username = player.username;
+        server.observer = new GameObserver();
+        server.start();
+
+//        System.out.println("Thread after server start: " + Thread.currentThread().getId());
 
         myIpText.setText(player.ip + ":" + player.port);
         usernameLabel.setText(player.username);
+    }
+
+
+    private class GameObserver implements Observer {
+        @Override
+        public void updateThings() {
+            Platform.runLater(() -> {
+                System.out.println("Updated things!");
+                scoreWinLabel.setText("35");
+            });
+        }
     }
 }

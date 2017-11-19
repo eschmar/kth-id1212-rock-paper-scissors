@@ -4,6 +4,7 @@ import io.eschmann.common.Message;
 import io.eschmann.model.Opponent;
 import io.eschmann.model.Player;
 import io.eschmann.net.client.OpponentConnection;
+import io.eschmann.net.server.ReceiverServer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,7 @@ import java.net.Socket;
 public class LoginController {
     protected Player player;
     protected Stage primaryStage;
+    protected ReceiverServer server;
 
     @FXML
     public TextField myIpText;
@@ -50,7 +52,7 @@ public class LoginController {
 
         // get controller
         GameController gameController = (GameController) loader.getController();
-        gameController.init(player, primaryStage);
+        gameController.init(player, primaryStage, server);
 
         // show scene
         primaryStage.getScene().setRoot(root);
@@ -64,7 +66,7 @@ public class LoginController {
         try {
             player.joinGame(input[0], Integer.parseInt(input[1]));
         } catch (ClassNotFoundException e) {
-            // could not join game.
+            System.out.println("Unable to join game.");
         }
     }
 
@@ -73,9 +75,10 @@ public class LoginController {
      * @param player
      * @param stage
      */
-    public void init(Player player, Stage stage) {
+    public void init(Player player, Stage stage, ReceiverServer server) {
         this.player = player;
         this.primaryStage = stage;
+        this.server = server;
 
         myIpText.setText(player.ip + ":" + player.port);
         usernameInput.setText(player.username);

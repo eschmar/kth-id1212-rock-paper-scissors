@@ -1,14 +1,15 @@
 package io.eschmann.net.server;
 
 import io.eschmann.model.Opponent;
-
 import java.io.IOException;
 import java.net.ServerSocket;
 
 public class ReceiverServer implements Runnable {
     private ServerSocket serverSocket;
     public Integer port;
+    public String username;
     public String ip;
+    public Observer observer;
 
     /**
      * Opens a new socket on a random port.
@@ -38,14 +39,16 @@ public class ReceiverServer implements Runnable {
      */
     @Override
     public void run() {
+        System.out.println("Thread inside run(): " + Thread.currentThread().getId());
         try {
             System.out.println("Successfully opened socket and running!");
             while (true) {
                 // handle messages
-                new MessageHandler(serverSocket.accept(), new Opponent(ip, port)).handle();
+                MessageHandler handler = new MessageHandler(serverSocket.accept(), new Opponent(ip, port, username), observer);
+                handler.handle();
             }
-//            while (true) new PeerClientHandler(serverSocket.accept(), controllerObserver).run();
         } catch (IOException e) {
+            System.out.println("ReceiverServer experienced an error and will terminate! " + e.getMessage());
             // catch.
         } finally {
             terminate();

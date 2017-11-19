@@ -10,45 +10,38 @@ import java.net.Socket;
 public class MessageHandler {
     private Socket socket;
     protected Opponent playerAsOpponent;
+    Observer observer;
 
-    public MessageHandler(Socket socket, Opponent opponent) {
+    public MessageHandler(Socket socket, Opponent opponent, Observer observer) {
         this.socket = socket;
         this.playerAsOpponent = opponent;
+        this.observer = observer;
     }
 
     public void handle() {
         try {
+            System.out.println("MessageHandler is handling a message.");
+
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
 
+            // receive message from opponent
             Message message = (Message) in.readObject();
+
             switch (message.type) {
                 case Message.TYPE_JOIN:
+                    // respond
                     out.writeObject(playerAsOpponent);
                     break;
                 default:
                     System.out.println("Unsupported message received...");
             }
 
-            System.out.println(message);
-
-//            switch (message.message) {
-//                case JOIN:
-//                    controllerObserver.addPeer(message.getSenderPeerInfo());
-//                    out.writeObject(new MessageWrapper(Message.SYNC, controllerObserver.getPeerInfo()));
-//                    break;
-//                case LEAVE:
-//                    controllerObserver.removePeer(message.getSenderPeerInfo());
-//                    break;
-//                case MOVE:
-//                    controllerObserver.setPeerMove(message.getMove(), message.getSenderPeerInfo());
-//                    break;
-//                default:
-//                    LOGGER.log(Level.SEVERE, "Unrecognized command!");
-//            }
-            // do things
+            socket.close();
+            observer.updateThings();
         } catch (Exception e) {
-
+            System.out.println("MessageHandler error --> " + e.getMessage());
+            e.printStackTrace(System.out);
         }
     }
 }
