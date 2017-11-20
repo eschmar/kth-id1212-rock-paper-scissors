@@ -10,4 +10,5 @@ public interface Observer {
     public void addLog(String message);
     public Player newPlayerJoined(Opponent opponent, ArrayList<Opponent> opponents);
     void newPlayerAnnouncedHimself(Opponent newOpponent);
+    void opponentSentMove(Opponent opponent, String move, int round);
 }

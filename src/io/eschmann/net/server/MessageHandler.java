@@ -25,11 +25,12 @@ public class MessageHandler {
 
             // receive message from opponent
             Message message = (Message) in.readObject();
+            Opponent opponent = null;
 
             switch (message.type) {
                 case Message.TYPE_JOIN:
-                    Opponent newOpponent = message.opponent;
-                    Player player = observer.newPlayerJoined(newOpponent, message.opponents);
+                    opponent = message.opponent;
+                    Player player = observer.newPlayerJoined(opponent, message.opponents);
 
                     Message msg = new Message(Message.TYPE_JOIN, "May i join?");
                     msg.opponent = player.toOpponent();
@@ -37,12 +38,19 @@ public class MessageHandler {
 
                     // respond
                     out.writeObject(msg);
-                    observer.addLog(newOpponent + " joined.");
+                    observer.addLog(opponent.username + " joined.");
                     break;
                 case Message.TYPE_ANNOUNCE:
-                    Opponent anonuncedOpponent = message.opponent;
-                    observer.newPlayerAnnouncedHimself(anonuncedOpponent);
-                    observer.addLog(anonuncedOpponent + " joined.");
+                    opponent = message.opponent;
+                    observer.newPlayerAnnouncedHimself(opponent);
+                    observer.addLog(opponent.username + " announced himself.");
+                    break;
+                case Message.TYPE_MOVE:
+                    System.out.println("Got a move!");
+                    opponent = message.opponent;
+                    observer.opponentSentMove(opponent, message.move, message.round);
+                    observer.addLog(opponent.username + " sent move #" + message.round + ".");
+                    break;
                 default:
                     System.out.println("Unsupported message received...");
             }

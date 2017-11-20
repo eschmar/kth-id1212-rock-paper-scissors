@@ -107,7 +107,9 @@ public class GameController {
         rockBtn.setDisable(true);
         paperBtn.setDisable(true);
         scissorsBtn.setDisable(true);
+
         player.makeMove(move);
+        server.observer.updateScoreView();
     }
 
     private class GameObserver implements Observer {
@@ -119,6 +121,12 @@ public class GameController {
                 roundNumberLabel.setText("" + player.getRoundCount());
                 playerCountLabel.setText("" + player.getOpponents().size());
                 System.out.println("Updated things!");
+
+                if (!player.hasReceivedAllAnswers()) return;
+
+                rockBtn.setDisable(false);
+                paperBtn.setDisable(false);
+                scissorsBtn.setDisable(false);
             });
         }
 
@@ -141,6 +149,12 @@ public class GameController {
         @Override
         public void newPlayerAnnouncedHimself(Opponent newOpponent) {
             player.addOpponent(newOpponent);
+            updateScoreView();
+        }
+
+        @Override
+        public void opponentSentMove(Opponent opponent, String move, int round) {
+            player.addOpponentMove(opponent, move, round);
             updateScoreView();
         }
     }

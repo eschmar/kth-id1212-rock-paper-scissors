@@ -65,4 +65,13 @@ public class OpponentConnection {
 
         out.writeObject(msg);
     }
+
+    public void sendMove(Opponent opponent, String move, Integer round) throws IOException {
+        Message msg = new Message(Message.TYPE_MOVE, "Here's my move.");
+        msg.opponent = opponent;
+        msg.move = move;
+        msg.round = round;
+
+        out.writeObject(msg);
+    }
 }
