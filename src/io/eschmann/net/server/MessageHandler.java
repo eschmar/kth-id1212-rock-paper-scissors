@@ -37,9 +37,7 @@ public class MessageHandler {
                     out.writeObject(msg);
                     break;
                 case Message.TYPE_ANNOUNCE:
-//                    opponent = message.opponent;
-//                    observer.newPlayerAnnouncedHimself(opponent);
-//                    observer.addLog(opponent.username + " announced himself.");
+                    observer.opponentAnnouncesHimself(message.opponent);
                     break;
                 case Message.TYPE_MOVE:
                     System.out.println("Got a move!");

@@ -138,11 +138,7 @@ public class GameController {
             });
         }
 
-        @Override
-        public void newPlayerAnnouncedHimself(Opponent newOpponent) {
-            player.addOpponent(newOpponent);
-            updateScoreView();
-        }
+
 
         @Override
         public void opponentSentMove(Opponent opponent, String move, int round) {
@@ -176,6 +172,16 @@ public class GameController {
             });
 
             return player;
+        }
+
+        @Override
+        public void opponentAnnouncesHimself(Opponent newOpponent) {
+            if (!player.addOpponent(newOpponent)) return;
+
+            Platform.runLater(() -> {
+                playerCountLabel.setText("" + player.getOpponents().size());
+                addLog(newOpponent.username + " joined");
+            });
         }
     }
 }
