@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public interface Observer {
     public void updateScoreView();
     public void addLog(String message);
-    public Player newPlayerJoined(Opponent opponent, ArrayList<Opponent> opponents);
+    public Player opponentWantsToJoin(Opponent opponent, ArrayList<Opponent> opponents);
     void newPlayerAnnouncedHimself(Opponent newOpponent);
     void opponentSentMove(Opponent opponent, String move, int round);
 }

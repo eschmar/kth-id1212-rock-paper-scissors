@@ -56,10 +56,9 @@ public class Player {
         updateScore();
     }
 
-    public void addOpponent(Opponent opponent) {
-        System.out.println("addOpponent " + opponent);
+    public boolean addOpponent(Opponent opponent) {
         if (opponents.contains(opponent) || (ip.equals(opponent.ip) && port.equals(opponent.port))) {
-            return;
+            return false;
         }
 
         opponents.add(opponent);
@@ -70,15 +69,22 @@ public class Player {
                 opponentConnection.announceMyself(this.toOpponent());
                 opponentConnection.disconnect();
             } catch (Exception e) {
-                System.out.println("Unable to join game.");
+                System.out.println("Announce failed.");
             }
         });
+
+        return true;
     }
 
-    public void addOpponents(ArrayList<Opponent> opponents) {
+    public ArrayList<Opponent> addOpponents(ArrayList<Opponent> opponents) {
+        ArrayList<Opponent> added = new ArrayList<Opponent>();
         for (Opponent opponent : opponents) {
-            addOpponent(opponent);
+            if (addOpponent(opponent)) {
+                added.add(opponent);
+            }
         }
+
+        return added;
     }
 
     public Opponent toOpponent() {

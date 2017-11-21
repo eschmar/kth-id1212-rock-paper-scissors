@@ -108,8 +108,8 @@ public class GameController {
         paperBtn.setDisable(true);
         scissorsBtn.setDisable(true);
 
-        player.makeMove(move);
-        server.observer.updateScoreView();
+//        player.makeMove(move);
+//        server.observer.updateScoreView();
     }
 
     private class GameObserver implements Observer {
@@ -139,14 +139,6 @@ public class GameController {
         }
 
         @Override
-        public Player newPlayerJoined(Opponent opponent, ArrayList<Opponent> opponents) {
-            player.addOpponent(opponent);
-            player.addOpponents(opponents);
-            updateScoreView();
-            return player;
-        }
-
-        @Override
         public void newPlayerAnnouncedHimself(Opponent newOpponent) {
             player.addOpponent(newOpponent);
             updateScoreView();
@@ -156,6 +148,34 @@ public class GameController {
         public void opponentSentMove(Opponent opponent, String move, int round) {
             player.addOpponentMove(opponent, move, round);
             updateScoreView();
+        }
+
+
+        // NEW NEW
+
+        @Override
+        public Player opponentWantsToJoin(Opponent opponent, ArrayList<Opponent> opponents) {
+            ArrayList<Opponent> newOpponents = new ArrayList<Opponent>();
+            if (player.addOpponent(opponent)) {
+                newOpponents.add(opponent);
+            }
+
+            for (Opponent o : opponents) {
+                if (player.addOpponent(o)) {
+                    newOpponents.add(o);
+                }
+            }
+
+            // update view
+            Platform.runLater(() -> {
+                playerCountLabel.setText("" + player.getOpponents().size());
+
+                for (Opponent o : newOpponents) {
+                    addLog(o.username + " joined");
+                }
+            });
+
+            return player;
         }
     }
 }

@@ -30,33 +30,28 @@ public class MessageHandler {
             switch (message.type) {
                 case Message.TYPE_JOIN:
                     opponent = message.opponent;
-                    Player player = observer.newPlayerJoined(opponent, message.opponents);
-
-                    Message msg = new Message(Message.TYPE_JOIN, "May i join?");
-                    msg.opponent = player.toOpponent();
-                    msg.opponents = player.getOpponents();
+                    Player player = observer.opponentWantsToJoin(opponent, message.opponents);
 
                     // respond
+                    Message msg = new Message(Message.TYPE_JOIN, player.toOpponent(), player.getOpponents());
                     out.writeObject(msg);
-                    observer.addLog(opponent.username + " joined.");
                     break;
                 case Message.TYPE_ANNOUNCE:
-                    opponent = message.opponent;
-                    observer.newPlayerAnnouncedHimself(opponent);
-                    observer.addLog(opponent.username + " announced himself.");
+//                    opponent = message.opponent;
+//                    observer.newPlayerAnnouncedHimself(opponent);
+//                    observer.addLog(opponent.username + " announced himself.");
                     break;
                 case Message.TYPE_MOVE:
                     System.out.println("Got a move!");
-                    opponent = message.opponent;
-                    observer.opponentSentMove(opponent, message.move, message.round);
-                    observer.addLog(opponent.username + " sent move #" + message.round + ".");
+//                    opponent = message.opponent;
+//                    observer.opponentSentMove(opponent, message.move, message.round);
+//                    observer.addLog(opponent.username + " sent move #" + message.round + ".");
                     break;
                 default:
                     System.out.println("Unsupported message received...");
             }
 
             socket.close();
-            observer.updateScoreView();
         } catch (Exception e) {
             System.out.println("MessageHandler error --> " + e.getMessage());
             e.printStackTrace(System.out);

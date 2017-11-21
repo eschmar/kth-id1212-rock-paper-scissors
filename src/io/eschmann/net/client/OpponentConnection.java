@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class OpponentConnection {
     private static final int TIMEOUT_READ_BLOCK = 1800000;
@@ -39,14 +40,12 @@ public class OpponentConnection {
     }
 
     public void sendJoinMessage(Player player, Observer gameObserver) throws IOException, ClassNotFoundException {
-        Message msg = new Message(Message.TYPE_JOIN, "May i join?");
-        msg.opponent = player.toOpponent();
-
+        Message msg = new Message(Message.TYPE_JOIN, player.toOpponent(), null);
         out.writeObject(msg);
 
         Message message = (Message) in.readObject();
         Opponent newOpponent = message.opponent;
-        gameObserver.newPlayerJoined(newOpponent, message.opponents);
+        gameObserver.opponentWantsToJoin(newOpponent, message.opponents);
     }
 
     /**
@@ -60,18 +59,12 @@ public class OpponentConnection {
     }
 
     public void announceMyself(Opponent opponent) throws IOException {
-        Message msg = new Message(Message.TYPE_ANNOUNCE, "I'm new here.");
-        msg.opponent = opponent;
-
+        Message msg = new Message(Message.TYPE_ANNOUNCE, opponent);
         out.writeObject(msg);
     }
 
     public void sendMove(Opponent opponent, String move, Integer round) throws IOException {
-        Message msg = new Message(Message.TYPE_MOVE, "Here's my move.");
-        msg.opponent = opponent;
-        msg.move = move;
-        msg.round = round;
-
+        Message msg = new Message(Message.TYPE_MOVE, opponent, move, round);
         out.writeObject(msg);
     }
 }
