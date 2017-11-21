@@ -1,11 +1,6 @@
 package io.eschmann.model;
 
-import io.eschmann.controller.GameController;
 import io.eschmann.net.client.OpponentConnection;
-import io.eschmann.net.server.ReceiverServer;
-
-import java.io.IOException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +18,8 @@ public class Player {
     private int score = 0;
     private int losses = 0;
 
+    public boolean canStartNewRound = false;
+
     public Player(String ip, Integer port) throws UnknownHostException {
         this.opponents = new ArrayList<Opponent>();
         this.opponentMoves = new HashMap<Integer, ArrayList<String>>();
@@ -30,30 +27,6 @@ public class Player {
         this.ip = ip;
         this.port = port;
         this.username = port.toString();
-    }
-
-    public void makeMove(String move) {
-        if (!move.equals(Game.MOVE_ROCK) && !move.equals(Game.MOVE_PAPER) && !move.equals(Game.MOVE_SCISSORS)) {
-            throw new IllegalArgumentException("Illegal move detected!");
-        }
-
-        System.out.println("Made move " + move);
-        moves.put(roundCount, move);
-
-        for (Opponent opponent : opponents) {
-            CompletableFuture.runAsync(() -> {
-                try {
-                    OpponentConnection opponentConnection = new OpponentConnection();
-                    opponentConnection.connect(opponent);
-                    opponentConnection.sendMove(this.toOpponent(), move, roundCount);
-                    opponentConnection.disconnect();
-                } catch (Exception e) {
-                    System.out.println("Unable to send move.");
-                }
-            });
-        }
-
-        updateScore();
     }
 
     public boolean addOpponent(Opponent opponent) {
@@ -116,10 +89,35 @@ public class Player {
         return "P - " + username + " [" + ip + ":" + port + "]";
     }
 
-    public void addOpponentMove(Opponent opponent, String move, int round) {
+    public void makeMove(String move) {
+        if (!move.equals(Game.MOVE_ROCK) && !move.equals(Game.MOVE_PAPER) && !move.equals(Game.MOVE_SCISSORS)) {
+            throw new IllegalArgumentException("Illegal move detected!");
+        }
+
+        canStartNewRound = false;
+        moves.put(roundCount, move);
+        int round = roundCount;
+
+        for (Opponent opponent : opponents) {
+            CompletableFuture.runAsync(() -> {
+                try {
+                    OpponentConnection opponentConnection = new OpponentConnection();
+                    opponentConnection.connect(opponent);
+                    opponentConnection.sendMove(this.toOpponent(), move, round);
+                    opponentConnection.disconnect();
+                } catch (Exception e) {
+                    System.out.println("Unable to send move.");
+                }
+            });
+        }
+
+        updateScore();
+    }
+
+    public boolean addOpponentMove(Opponent opponent, String move, int round) {
         if (!opponents.contains(opponent)) {
             // only allow known opponents to participate.
-            return;
+            return false;
         }
 
         if (!opponentMoves.containsKey(round)) {
@@ -128,6 +126,7 @@ public class Player {
 
         opponentMoves.get(round).add(move);
         updateScore();
+        return true;
     }
 
     protected void updateScore() {
@@ -149,18 +148,13 @@ public class Player {
         this.score = score;
         this.losses = losses;
 
-        System.out.println("Update score ");
-        if (this.hasReceivedAllAnswers() && this.moves.containsKey(this.roundCount)) {
-            this.roundCount++;
-        }
-    }
+        // check whether we can start a new round
+        if (!this.moves.containsKey(this.roundCount)) return;
+        if (getNumberOfPlays(this.roundCount) == 0) return;
+        if (this.opponents.size() != getNumberOfPlays(this.roundCount)) return;
 
-    public boolean hasReceivedAllAnswers() {
-        System.out.println("round: " + roundCount);
-//        System.out.println("1 hasReceivedAllAnswers " + this.opponents.size() + " / " + this.getNumberOfPlays(roundCount - 1));
-//        if (roundCount < 1) return false;
-//        System.out.println("2 hasReceivedAllAnswers " + this.opponents.size() + " / " + this.getNumberOfPlays(roundCount - 1));
-        return this.opponents.size() == getNumberOfPlays(roundCount - 1);
+        this.roundCount++;
+        canStartNewRound = true;
     }
 
     public int getNumberOfPlays(int turn) {

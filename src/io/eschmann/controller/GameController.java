@@ -108,8 +108,8 @@ public class GameController {
         paperBtn.setDisable(true);
         scissorsBtn.setDisable(true);
 
-//        player.makeMove(move);
-//        server.observer.updateScoreView();
+        player.makeMove(move);
+        server.observer.updateScoreView();
     }
 
     private class GameObserver implements Observer {
@@ -119,14 +119,14 @@ public class GameController {
                 scoreWinLabel.setText("" + player.getScore());
                 scoreLossLabel.setText("" + player.getLosses());
                 roundNumberLabel.setText("" + player.getRoundCount());
-                playerCountLabel.setText("" + player.getOpponents().size());
-                System.out.println("Updated things!");
 
-                if (!player.hasReceivedAllAnswers()) return;
+                if (!player.canStartNewRound) return;
 
                 rockBtn.setDisable(false);
                 paperBtn.setDisable(false);
                 scissorsBtn.setDisable(false);
+                addLog(" --- new round!");
+                player.canStartNewRound = false;
             });
         }
 
@@ -137,17 +137,6 @@ public class GameController {
                 logTextarea.appendText(timestamp + " - " + message + "\n");
             });
         }
-
-
-
-        @Override
-        public void opponentSentMove(Opponent opponent, String move, int round) {
-            player.addOpponentMove(opponent, move, round);
-            updateScoreView();
-        }
-
-
-        // NEW NEW
 
         @Override
         public Player opponentWantsToJoin(Opponent opponent, ArrayList<Opponent> opponents) {
@@ -181,6 +170,16 @@ public class GameController {
             Platform.runLater(() -> {
                 playerCountLabel.setText("" + player.getOpponents().size());
                 addLog(newOpponent.username + " joined");
+            });
+        }
+
+        @Override
+        public void opponentSentMove(Opponent opponent, String move, int round) {
+            if (!player.addOpponentMove(opponent, move, round)) return;
+
+            Platform.runLater(() -> {
+                addLog(opponent.username + " sent a move.");
+                updateScoreView();
             });
         }
     }

@@ -40,10 +40,7 @@ public class MessageHandler {
                     observer.opponentAnnouncesHimself(message.opponent);
                     break;
                 case Message.TYPE_MOVE:
-                    System.out.println("Got a move!");
-//                    opponent = message.opponent;
-//                    observer.opponentSentMove(opponent, message.move, message.round);
-//                    observer.addLog(opponent.username + " sent move #" + message.round + ".");
+                    observer.opponentSentMove(message.opponent, message.move, message.round);
                     break;
                 default:
                     System.out.println("Unsupported message received...");
