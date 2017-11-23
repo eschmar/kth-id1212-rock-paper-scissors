@@ -2,6 +2,7 @@ package io.eschmann.controller;
 
 import io.eschmann.model.Opponent;
 import io.eschmann.model.Player;
+import io.eschmann.net.CommunicationServer;
 import io.eschmann.net.server.ReceiverServer;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,7 +15,7 @@ import java.io.IOException;
 public class LoginController {
     protected Player player;
     protected Stage primaryStage;
-    protected ReceiverServer server;
+    protected CommunicationServer server;
 
     @FXML
     public TextField myIpText;
@@ -42,23 +43,23 @@ public class LoginController {
         player.username = usernameInput.getText();
 
         // load new view
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/game.fxml"));
-        Parent root = loader.load();
-
-        // checked if join was clicked
-        Opponent opponent = null;
-        if (clickedJoin) {
-            String[] input = joinInput.getText().split(":");
-            opponent = new Opponent(input[0], Integer.parseInt(input[1]));
-        }
-
-        // get controller
-        GameController gameController = (GameController) loader.getController();
-        gameController.init(player, primaryStage, server, opponent);
-
-        // show scene
-        primaryStage.getScene().setRoot(root);
-        primaryStage.show();
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/game.fxml"));
+//        Parent root = loader.load();
+//
+//        // checked if join was clicked
+//        Opponent opponent = null;
+//        if (clickedJoin) {
+//            String[] input = joinInput.getText().split(":");
+//            opponent = new Opponent(input[0], Integer.parseInt(input[1]));
+//        }
+//
+//        // get controller
+//        GameController gameController = (GameController) loader.getController();
+//        gameController.init(player, primaryStage, server, opponent);
+//
+//        // show scene
+//        primaryStage.getScene().setRoot(root);
+//        primaryStage.show();
     }
 
     /**
@@ -66,7 +67,7 @@ public class LoginController {
      * @param player
      * @param stage
      */
-    public void init(Player player, Stage stage, ReceiverServer server) {
+    public void init(Player player, Stage stage, CommunicationServer server) {
         this.player = player;
         this.primaryStage = stage;
         this.server = server;
