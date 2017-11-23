@@ -43,23 +43,23 @@ public class LoginController {
         player.username = usernameInput.getText();
 
         // load new view
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/game.fxml"));
-//        Parent root = loader.load();
-//
-//        // checked if join was clicked
-//        Opponent opponent = null;
-//        if (clickedJoin) {
-//            String[] input = joinInput.getText().split(":");
-//            opponent = new Opponent(input[0], Integer.parseInt(input[1]));
-//        }
-//
-//        // get controller
-//        GameController gameController = (GameController) loader.getController();
-//        gameController.init(player, primaryStage, server, opponent);
-//
-//        // show scene
-//        primaryStage.getScene().setRoot(root);
-//        primaryStage.show();
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/game.fxml"));
+        Parent root = loader.load();
+
+        // checked if join was clicked
+        Opponent opponent = null;
+        if (clickedJoin) {
+            String[] input = joinInput.getText().split(":");
+            opponent = new Opponent(input[0], Integer.parseInt(input[1]));
+        }
+
+        // get controller
+        GameController gameController = (GameController) loader.getController();
+        gameController.init(player, primaryStage, server, opponent);
+
+        // show scene
+        primaryStage.getScene().setRoot(root);
+        primaryStage.show();
     }
 
     /**

@@ -1,15 +1,13 @@
 package io.eschmann.net;
 
+import io.eschmann.model.Opponent;
 import io.eschmann.net.common.Observer;
 import io.eschmann.net.server.MessageHandler;
 
 import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -98,17 +96,22 @@ public class CommunicationServer implements Runnable {
                 try {
                     // accept connection
                     if (key.isAcceptable()) {
+                        System.out.println("Acceptable");
                         this.handleAcceptableKey(key);
                     // read from a channel
                     }else if (key.isReadable()) {
+                        System.out.println("Readable");
                         this.handleReadableKey(key);
                     // write to a channel
                     }else if (key.isWritable()) {
+                        System.out.println("Writeable");
                         this.handleWriteableKey(key);
                     // establish new connection
                     }else if (key.isConnectable()) {
-                        // do something
-                        System.out.println("Connection not yet implemented.");
+                        System.out.println("Connectable");
+                        this.handleConnectableKey(key);
+                    }else {
+                        System.out.println("Zombie key found?");
                     }
                 } catch (IOException e) {
                     System.out.println("Key handling failed. Trying to close the channel..");
@@ -126,6 +129,17 @@ public class CommunicationServer implements Runnable {
         }
     }
 
+    private void handleConnectableKey(SelectionKey key) {
+        SocketChannel client = (SocketChannel) key.channel();
+
+        try {
+            client.finishConnect();
+            key.interestOps(SelectionKey.OP_READ);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handleAcceptableKey(SelectionKey key) throws IOException {
         ServerSocketChannel server = (ServerSocketChannel) key.channel();
         SocketChannel clientChannel = server.accept();
@@ -133,38 +147,6 @@ public class CommunicationServer implements Runnable {
         clientChannel.configureBlocking(false);
 
         clientChannel.register(selector, SelectionKey.OP_READ, ByteBuffer.allocate(1024));
-
-
-
-
-
-
-//        ServerSocketChannel server = (ServerSocketChannel) key.channel();
-//        SocketChannel client = server.accept();
-//        System.out.println("Accepted connection from " + client);
-//        client.configureBlocking(false);
-//        SelectionKey key2 = client.register(selector, SelectionKey.
-//                OP_WRITE);
-//        ByteBuffer buffer = ByteBuffer.allocate(74);
-//        buffer.put(rotation, 0, 72);
-//        buffer.put((byte) '\r');
-//        buffer.put((byte) '\n');
-//        buffer.flip();
-//        key2.attach(buffer);
-
-        // ----
-
-//        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
-//        SocketChannel clientChannel = serverSocketChannel.accept();
-//        clientChannel.configureBlocking(false);
-//        ClientHandler handler = new ClientHandler(this, clientChannel);
-//        clientChannel.register(selector, SelectionKey.OP_WRITE, new Client(handler, contr.
-//                getConversation()));
-//        clientChannel.setOption(StandardSocketOptions.SO_LINGER, LINGER_TIME); //Close will probably
-        //block on some JVMs.
-        // clientChannel.socket().setSoTimeout(TIMEOUT_HALF_HOUR); Timeout is not supported on
-        // socket channels. Could be implemented using a separate timer that is checked whenever the
-        // select() method in the main loop returns.
     }
 
     private void handleReadableKey(SelectionKey key) throws IOException {
@@ -215,17 +197,6 @@ public class CommunicationServer implements Runnable {
 //        client.write(buffer);
     }
 
-//            try {
-//            while (true) {
-//                // handle messages
-//                new MessageHandler(serverSocket.accept(), observer).handle();
-//            }
-//        } catch (IOException e) {
-//            System.out.println("ReceiverServer experienced an error and will terminate! " + e.getMessage());
-//        } finally {
-//            terminate();
-//        }
-
     /**
      * Tries to terminate the server.
      */
@@ -235,6 +206,22 @@ public class CommunicationServer implements Runnable {
         } catch (IOException e) {
             System.out.println("Could not close server channel.");
             System.out.println(e.getStackTrace());
+        }
+    }
+
+    public void addNewNodeChannel(Opponent opponent) {
+        System.out.println("Add new channel");
+        try {
+            SocketChannel socketChannel = SocketChannel.open();
+            socketChannel.configureBlocking(false);
+            socketChannel.connect(new InetSocketAddress(opponent.ip, opponent.port));
+
+            selector.wakeup();
+            socketChannel.register(selector, SelectionKey.OP_CONNECT);
+        } catch (ClosedChannelException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

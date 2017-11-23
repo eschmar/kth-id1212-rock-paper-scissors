@@ -3,6 +3,7 @@ package io.eschmann.controller;
 import io.eschmann.model.Game;
 import io.eschmann.model.Opponent;
 import io.eschmann.model.Player;
+import io.eschmann.net.CommunicationServer;
 import io.eschmann.net.client.OpponentConnection;
 import io.eschmann.net.common.Observer;
 import io.eschmann.net.server.ReceiverServer;
@@ -24,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 public class GameController {
     protected Player player;
     protected Stage primaryStage;
-    protected ReceiverServer server;
+    protected CommunicationServer server;
     private final OpponentConnection opponentConnection = new OpponentConnection();
 
     @FXML
@@ -65,7 +66,7 @@ public class GameController {
      * @param player
      * @param stage
      */
-    public void init(Player player, Stage stage, ReceiverServer server, Opponent opponent) {
+    public void init(Player player, Stage stage, CommunicationServer server, Opponent opponent) {
         this.player = player;
         this.primaryStage = stage;
         this.server = server;
@@ -80,15 +81,17 @@ public class GameController {
 
         if (opponent == null) return;
 
-        CompletableFuture.runAsync(() -> {
-            try {
-                opponentConnection.connect(opponent);
-                opponentConnection.sendJoinMessage(player, new GameObserver());
-                opponentConnection.disconnect();
-            } catch (Exception e) {
-                System.out.println("Unable to join game.");
-            }
-        });
+        server.addNewNodeChannel(opponent);
+
+//        CompletableFuture.runAsync(() -> {
+//            try {
+//                opponentConnection.connect(opponent);
+//                opponentConnection.sendJoinMessage(player, new GameObserver());
+//                opponentConnection.disconnect();
+//            } catch (Exception e) {
+//                System.out.println("Unable to join game.");
+//            }
+//        });
     }
 
     public void onMoveRockAction(ActionEvent actionEvent) {
