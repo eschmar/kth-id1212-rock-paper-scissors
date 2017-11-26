@@ -8,10 +8,12 @@ import java.io.IOException;
 import java.net.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class CommunicationServer implements Runnable {
+    private static final int TIMEOUT_READ_BLOCK = 1800000;
+    private static final int LINGER_TIME = 3000;
+
     private InetAddress localAddress;
     private InetSocketAddress address;
     public Observer observer;
@@ -129,6 +131,18 @@ public class CommunicationServer implements Runnable {
         }
     }
 
+    private void handleAcceptableKey(SelectionKey key) throws IOException {
+        ServerSocketChannel server = (ServerSocketChannel) key.channel();
+        SocketChannel clientChannel = server.accept();
+        System.out.println("Accepted connection from " + clientChannel);
+        clientChannel.configureBlocking(false);
+
+        Client client = new Client(new NioMessageHandler(), new Opponent(getIpAddress(), getPort()), new ArrayList<Opponent>());
+
+        clientChannel.register(selector, SelectionKey.OP_READ, client);
+        clientChannel.setOption(StandardSocketOptions.SO_LINGER, LINGER_TIME);
+    }
+
     private void handleConnectableKey(SelectionKey key) {
         SocketChannel client = (SocketChannel) key.channel();
 
@@ -138,15 +152,6 @@ public class CommunicationServer implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private void handleAcceptableKey(SelectionKey key) throws IOException {
-        ServerSocketChannel server = (ServerSocketChannel) key.channel();
-        SocketChannel clientChannel = server.accept();
-        System.out.println("Accepted connection from " + clientChannel);
-        clientChannel.configureBlocking(false);
-
-        clientChannel.register(selector, SelectionKey.OP_READ, ByteBuffer.allocate(1024));
     }
 
     private void handleReadableKey(SelectionKey key) throws IOException {
@@ -223,5 +228,18 @@ public class CommunicationServer implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private class Client {
+        private final NioMessageHandler handler;
+        private final Queue<ByteBuffer> sendQueue = new ArrayDeque<>();
+
+        public Client(NioMessageHandler handler, Opponent playerAsOpponent, ArrayList<Opponent> opponents) {
+            this.handler = handler;
+
+            NioMessage temp = new NioMessage(NioMessage.TYPE_JOIN, playerAsOpponent, opponents);
+            sendQueue.add(ByteBuffer.wrap(temp.toString().getBytes()));
+        }
+
     }
 }
